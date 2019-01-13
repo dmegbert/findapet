@@ -1,3 +1,5 @@
+import csv
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -5,6 +7,16 @@ _url = "https://www.petfinder.com/{}"
 _user_agent = """Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"""
 
 _headers = {'user-agent': _user_agent}
+
+
+def main():
+    links = get_all_breed_links()
+    fieldnames = get_individual_dog_data(links[0]).keys()
+    all_dogs = [get_individual_dog_data(link).values() for link in links]
+    with open('dogs.csv', 'w') as file:
+        writer = csv.writer(file)
+        writer.writerow(fieldnames)
+        writer.writerows(all_dogs)
 
 
 def _get_content(url, headers, url_param=None):
@@ -59,14 +71,6 @@ def get_individual_dog_data(breed_url):
                 history: str,
                 temperament: str,
                 upkeep: str
-                health: {
-                            major_concerns: [],
-                            minor_concerns: [],
-                            occasionally_seen: [],
-                            suggested_tests: [],
-                            life_span: {min: int, max int},
-                            note: str
-                        }
     }
     """
     dog = {}
@@ -78,24 +82,37 @@ def get_individual_dog_data(breed_url):
     dog = _set_out_of_five_attributes(dog_data=dog, out_of_five_attributes=out_of_five_attributes)
 
     dog = _get_type_family_other_names(dog, html_content)
-    dog['health'] = _get_dog_health(html_content)
 
-    # TODO Fix history and add temperament and upkeep
-    deog['history'] = _get_history(html_content)
-    dog['temperament'] = None
-    dog['upkeep'] = None
+    # Taking Health out for now
+    # dog['health'] = _get_dog_health(html_content, dog, breed_url)
 
-
+    dog['history'], dog['temperament'], dog['upkeep'] = _split_out_history_temperament_upkeep(html_content)
 
     return dog
 
 
-def _get_dog_health(html_content):
+def _split_out_history_temperament_upkeep(html_content):
+    history_temp_up = _get_history_temperament_upkeep(html_content)
+    if len(history_temp_up) > 3:
+        history = ''
+        while len(history_temp_up) > 2:
+            history = history + history_temp_up.pop(0)
+        temperament, upkeep = history_temp_up
+        return history, temperament, upkeep
+    else:
+        return history_temp_up
+
+
+def _get_dog_health(html_content, dog=None, breed_url=None):
     dog_health = {}
     for tag in html_content.find_all('div', class_='m-wysiwyg_txtLoose'):
         for inner_tag in tag.find_all('li'):
             key_and_value = inner_tag.string
-            key, value = key_and_value.split(':')
+            try:
+                key, value = key_and_value.split(':')
+            except ValueError as ex:
+                print(dog['name'], ': ', breed_url)
+                print('\tkey_and_value: ', key_and_value)
             key = key.replace(' ', '_').lower()
             value = value.strip()
             dog_health[key] = value
@@ -117,13 +134,14 @@ def _get_type_family_other_names(dog, html_content):
     return dog
 
 
-def _get_history(html_content):
-    history = ''
+def _get_history_temperament_upkeep(html_content):
+    history_temperament_upkeep = []
     for tag in html_content.find_all('div', class_='m-wysiwyg_txtLoose'):
         for inner_tag in tag.find_all('p'):
             if inner_tag.string:
-                history = history + inner_tag.string
-    return history
+                history_temperament_upkeep.append(inner_tag.string)
+    return history_temperament_upkeep
+
 
 def _get_out_of_five_attributes(html_content):
     out_of_five_attributes = []
@@ -161,3 +179,7 @@ def _set_out_of_five_attributes(dog_data, out_of_five_attributes):
         dog_data['heat_sensitivity'] = out_of_five_attributes[9]
         dog_data['vocality'] = out_of_five_attributes[10]
     return dog_data
+
+
+if __name__ == '__main__':
+    main()
