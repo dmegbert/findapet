@@ -82,12 +82,39 @@ def get_individual_dog_data(breed_url):
     dog = _set_out_of_five_attributes(dog_data=dog, out_of_five_attributes=out_of_five_attributes)
 
     dog = _get_type_family_other_names(dog, html_content)
+    dog['other_names'] = dog.get('other_names', ' ')
+    dog = _split_weight(dog)
+    dog = _split_height(dog)
 
     # Taking Health out for now
     # dog['health'] = _get_dog_health(html_content, dog, breed_url)
 
     dog['history'], dog['temperament'], dog['upkeep'] = _split_out_history_temperament_upkeep(html_content)
+    print(dog['name'])
+    return dog
 
+
+def _split_weight(dog):
+    if not dog['weight']:
+        return dog
+    weight = dog['weight'].replace('lb', '').strip()
+    if '-' in weight:
+        dog['weight_min'], dog['weight_max'] = weight.split('-')
+    else:
+        dog['weight_min'], dog['weight_max'] = (weight, weight)
+    del dog['weight']
+    return dog
+
+
+def _split_height(dog):
+    if not dog['height']:
+        return dog
+    height = dog['height'].replace('"', '').strip()
+    if '-' in height:
+        dog['height_min'], dog['height_max'] = height.split('-')
+    else:
+        dog['height_min'], dog['height_max'] = (height, height)
+    del dog['height']
     return dog
 
 
