@@ -10,6 +10,7 @@ __pycache__/
 *.csv
 .DS_Store
 .idea/
+.env
 env/
 .Python
 build/
