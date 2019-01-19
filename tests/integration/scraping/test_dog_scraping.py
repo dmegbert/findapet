@@ -1,4 +1,4 @@
-from src.scraping.dog_scraping import get_all_breed_links
+from z_archive.scraping.dog_scraping import get_all_breed_links
 
 
 def test_get_all_breed_links():
