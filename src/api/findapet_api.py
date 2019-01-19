@@ -1,4 +1,3 @@
-import json
 from flask import Flask
 
 from dao import basic_query
