@@ -43,3 +43,15 @@ def get_dog_by_name(dog_name):
     with _get_cursor() as cursor:
         cursor.execute(query, {'dog_name': dog_name})
         return cursor.fetchone()
+
+
+def get_dog_by_id(dog_id):
+    query = """
+    SELECT *
+    FROM dog
+    WHERE id = %(dog_id)s
+    """
+
+    with _get_cursor() as cursor:
+        cursor.execute(query, {'dog_id': dog_id})
+        return cursor.fetchone()
