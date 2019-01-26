@@ -55,3 +55,15 @@ def get_dog_by_id(dog_id):
     with _get_cursor() as cursor:
         cursor.execute(query, {'dog_id': dog_id})
         return cursor.fetchone()
+
+
+def get_dog_by_criteria(energy_level):
+    query = """
+        SELECT *
+        FROM dog
+        WHERE energy_level IN %(energy_level)s
+        """
+
+    with _get_cursor() as cursor:
+        cursor.execute(query, {'energy_level': energy_level})
+        return cursor.fetchall()
