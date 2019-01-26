@@ -22,16 +22,22 @@ def get_random_dog_and_description():
     return {'breed': dog_info['name'], 'description': dog_info['description']}
 
 
-def get_alexa_dog(energy_level):
+def get_alexa_dog(energy_level, playfulness):
     energy_level_range = _text_to_range_mapper(energy_level)
-    dog_info = dog_dao.get_dog_by_criteria(energy_level=energy_level_range)
-    return {'breed': dog_info[0]['name'], 'description': dog_info[0]['description']}
+    playfulness_range = _text_to_range_mapper(playfulness)
+    dog_info = dog_dao.get_dog_by_criteria(energy_level=energy_level_range, playfulness=playfulness_range)
+    random_dog_index = _get_random_index(len(dog_info))
+    return {'breed': dog_info[random_dog_index]['name'], 'description': dog_info[random_dog_index]['description']}
 
 
-def _text_to_range_mapper(energy_level):
+def _text_to_range_mapper(text_to_map):
     mapping = {
         'low': (1, 2),
         'medium': (3, 4),
         'high': (4, 5)
     }
-    return mapping[energy_level]
+    return mapping[text_to_map]
+
+
+def _get_random_index(count_of_dogs):
+    return random.randint(0, count_of_dogs-1)

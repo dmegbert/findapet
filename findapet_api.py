@@ -29,8 +29,11 @@ def random_dog():
 
 @app.route('/dog/alexa')
 def alexa_dog():
-    logging.info('url params are: {}'.format(request.args.get('energy_level')))
-    dog_info = dog_service.get_alexa_dog(energy_level=request.args.get('energy_level'))
+    logging.info('url params are: {}'.format(request.args))
+    dog_info = dog_service.get_alexa_dog(
+        energy_level=request.args.get('energy_level'),
+        playfulness=request.args.get('playfulness')
+    )
     return jsonify(dog_info)
 
 
