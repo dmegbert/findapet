@@ -27,7 +27,12 @@ def get_alexa_dog(energy_level, playfulness):
     playfulness_range = _text_to_range_mapper(playfulness)
     dog_info = dog_dao.get_dog_by_criteria(energy_level=energy_level_range, playfulness=playfulness_range)
     random_dog_index = _get_random_index(len(dog_info))
-    return {'breed': dog_info[random_dog_index]['name'], 'description': dog_info[random_dog_index]['description']}
+    return {
+        'breed': dog_info[random_dog_index]['name'],
+        'description': dog_info[random_dog_index]['description'],
+        'personality': dog_info[random_dog_index]['personality'],
+        'history': dog_info[random_dog_index]['history']
+    }
 
 
 def _text_to_range_mapper(text_to_map):
