@@ -32,7 +32,8 @@ def alexa_dog():
     logging.info('url params are: {}'.format(request.args))
     dog_info = dog_service.get_alexa_dog(
         energy_level=request.args.get('energy_level'),
-        playfulness=request.args.get('playfulness')
+        playfulness=request.args.get('playfulness'),
+        affection=request.args.get('affection')
     )
     return jsonify(dog_info)
 

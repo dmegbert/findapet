@@ -22,10 +22,15 @@ def get_random_dog_and_description():
     return {'breed': dog_info['name'], 'description': dog_info['description']}
 
 
-def get_alexa_dog(energy_level, playfulness):
+def get_alexa_dog(energy_level, playfulness, affection):
     energy_level_range = _text_to_range_mapper(energy_level)
     playfulness_range = _text_to_range_mapper(playfulness)
-    dog_info = dog_dao.get_dog_by_criteria(energy_level=energy_level_range, playfulness=playfulness_range)
+    affection_range = _text_to_range_mapper(affection)
+
+    dog_info = dog_dao.get_dog_by_criteria(energy_level=energy_level_range,
+                                           playfulness=playfulness_range,
+                                           affection=affection_range)
+
     random_dog_index = _get_random_index(len(dog_info))
     return {
         'breed': dog_info[random_dog_index]['name'],

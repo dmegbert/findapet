@@ -57,17 +57,19 @@ def get_dog_by_id(dog_id):
         return cursor.fetchone()
 
 
-def get_dog_by_criteria(energy_level, playfulness):
+def get_dog_by_criteria(energy_level, playfulness, affection):
     query = """
         SELECT *
         FROM dog
         WHERE energy_level IN %(energy_level)s
             AND playfulness IN %(playfulness)s
+            AND affection_level IN %(affection)s
         """
 
     params = {
         'energy_level': energy_level,
-        'playfulness': playfulness
+        'playfulness': playfulness,
+        'affection': affection
     }
 
     with _get_cursor() as cursor:
