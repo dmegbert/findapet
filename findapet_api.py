@@ -33,7 +33,9 @@ def alexa_dog():
     dog_info = dog_service.get_alexa_dog(
         energy_level=request.args.get('energy_level'),
         playfulness=request.args.get('playfulness'),
-        affection=request.args.get('affection')
+        affection=request.args.get('affection'),
+        training=request.args.get('training'),
+        weight=request.args.get('weight')
     )
     return jsonify(dog_info)
 

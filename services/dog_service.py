@@ -22,14 +22,26 @@ def get_random_dog_and_description():
     return {'breed': dog_info['name'], 'description': dog_info['description']}
 
 
-def get_alexa_dog(energy_level, playfulness, affection):
+def get_alexa_dog(energy_level, playfulness, affection, training, weight):
     energy_level_range = _text_to_range_mapper(energy_level)
     playfulness_range = _text_to_range_mapper(playfulness)
     affection_range = _text_to_range_mapper(affection)
+    training_range = _text_to_range_mapper(training)
+    weight_min, weight_max = _get_weight_range(weight)
 
     dog_info = dog_dao.get_dog_by_criteria(energy_level=energy_level_range,
                                            playfulness=playfulness_range,
-                                           affection=affection_range)
+                                           affection=affection_range,
+                                           training=training_range,
+                                           weight_min=weight_min,
+                                           weight_max=weight_max)
+    if not dog_info:
+        return {
+            'breed': 'None',
+            'description': 'None',
+            'personality': 'None',
+            'history': 'None'
+        }
 
     random_dog_index = _get_random_index(len(dog_info))
     return {
@@ -47,6 +59,16 @@ def _text_to_range_mapper(text_to_map):
         'high': (4, 5)
     }
     return mapping[text_to_map]
+
+
+def _get_weight_range(weight):
+    mapping = {
+        'small': (0, 20),
+        'medium': (20, 60),
+        'large': (60, 100),
+        'jumbo': (100, 5000)
+    }
+    return mapping[weight]
 
 
 def _get_random_index(count_of_dogs):
