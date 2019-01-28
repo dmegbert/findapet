@@ -26,6 +26,11 @@ def get_alexa_dog(energy_level, playfulness, affection, training, weight):
     energy_level_range = _text_to_range_mapper(energy_level)
     playfulness_range = _text_to_range_mapper(playfulness)
     affection_range = _text_to_range_mapper(affection)
+    # Flip training for better phrasing in alexa
+    if training == 'low':
+        training = 'high'
+    elif training == 'high':
+        training = 'low'
     training_range = _text_to_range_mapper(training)
     weight_min, weight_max = _get_weight_range(weight)
 
@@ -55,7 +60,7 @@ def get_alexa_dog(energy_level, playfulness, affection, training, weight):
 def _text_to_range_mapper(text_to_map):
     mapping = {
         'low': (1, 2),
-        'medium': (3, 4),
+        'medium': (2, 3, 4),
         'high': (4, 5)
     }
     return mapping[text_to_map]
