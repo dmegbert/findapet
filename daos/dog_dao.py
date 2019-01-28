@@ -65,7 +65,7 @@ def get_dog_by_criteria(energy_level, playfulness, affection, training, weight_m
             AND playfulness IN %(playfulness)s
             AND affection_level IN %(affection)s
             AND ease_of_training IN %(training)s
-            AND weight_max >= %(weight_min)s
+            AND weight_max >= %(weight_max)s
             AND weight_max <= %(weight_max)s
         """
 
