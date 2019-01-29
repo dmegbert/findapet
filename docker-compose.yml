@@ -1,0 +1,32 @@
+version: "2.1"
+
+services:
+
+  db:
+      image: postgres:10
+      container_name: docker_petdb
+      restart: always
+      ports:
+      - 127.0.0.1:2345:5432
+      volumes:
+        - /Users/degbert/PycharmProjects/findapet/db/pgdata:/var/lib/postgresql/data
+      environment:
+        POSTGRES_PASSWORD: superHardPW
+        POSTGRES_USER: dockerDog
+        POSTGRES_DB: petdb
+
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: docker_pet_api
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/app
+    environment:
+      ENDPOINT: docker_petdb
+      DATABASE: petdb
+      DBUSER: dockerDog
+      DBPASSWORD: superHardPW
+      PORT: 5432
