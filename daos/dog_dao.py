@@ -47,7 +47,7 @@ def get_dog_by_name(dog_name):
 
 def get_dog_by_id(dog_id):
     query = """
-    SELECT *
+    SELECT id, name, description, history, personality
     FROM dog
     WHERE id = %(dog_id)s
     """

@@ -51,5 +51,10 @@ def breed_count():
     return jsonify(breeds)
 
 
+@app.route('/dog/<int:dog_id>')
+def single_dog_info(dog_id):
+    return jsonify(dog_dao.get_dog_by_id(dog_id=dog_id))
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
