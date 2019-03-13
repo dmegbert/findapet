@@ -1,7 +1,11 @@
+import logging
 import random
 import re
 
 from daos import dog_dao
+
+log = logging.getLogger()
+log.setLevel(logging.INFO)
 
 
 def sanitize_string(user_string):
@@ -12,6 +16,7 @@ def sanitize_string(user_string):
 
 def get_dog_description(dog_name):
     dog_name = sanitize_string(dog_name)
+    log.info('dog name is: {}'.format(dog_name))
     dog_information = dog_dao.get_dog_by_name(dog_name)
     return dog_information['description']
 
@@ -78,3 +83,47 @@ def _get_weight_range(weight):
 
 def _get_random_index(count_of_dogs):
     return random.randint(0, count_of_dogs-1)
+
+
+def _get_params_from_react_data(answers):
+    params = []
+    for param_dict in answers:
+        temp_params = []
+        for param, isActive in param_dict.items():
+            if isActive:
+                temp_params.append(param)
+        if not temp_params:
+            temp_params = [1, 2, 3, 4, 5]
+        params.append(tuple(temp_params))
+    return params
+
+
+def get_breeds(answers):
+    energy_params, playful_params, friendliness_to_dogs_params = _get_params_from_react_data(answers)
+    raw_dog_info = dog_dao.get_breeds_by_criteria(energy_level=energy_params,
+                                                  playfulness=playful_params,
+                                                  friendliness_to_dogs=friendliness_to_dogs_params,
+                                                  affection=(1, 2, 3, 4, 5),
+                                                  training=(1, 2, 3, 4, 5),
+                                                  weight_min=0,
+                                                  weight_max=300)
+    dog_info = {dog['id']: dog['name'] for dog in raw_dog_info}
+    return dog_info
+
+
+fake_data = [
+  {
+    "1": False,
+    "2": False,
+    "3": False,
+    "4": True,
+    "5": True
+  },
+  {
+    "1": False,
+    "2": True,
+    "3": False,
+    "4": True,
+    "5": True
+  }
+]

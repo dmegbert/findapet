@@ -81,3 +81,31 @@ def get_dog_by_criteria(energy_level, playfulness, affection, training, weight_m
     with _get_cursor() as cursor:
         cursor.execute(query, params)
         return cursor.fetchall()
+
+
+def get_breeds_by_criteria(energy_level, playfulness, friendliness_to_dogs, affection, training, weight_min, weight_max):
+    query = """
+        SELECT *
+        FROM dog
+        WHERE energy_level IN %(energy_level)s
+            AND playfulness IN %(playfulness)s
+            AND friendliness_to_dogs IN %(friendliness_to_dogs)s
+            AND affection_level IN %(affection)s
+            AND ease_of_training IN %(training)s
+            AND weight_max >= %(weight_min)s
+            AND weight_max <= %(weight_max)s
+        """
+
+    params = {
+        'energy_level': energy_level,
+        'playfulness': playfulness,
+        'friendliness_to_dogs': friendliness_to_dogs,
+        'affection': affection,
+        'training': training,
+        'weight_min': weight_min,
+        'weight_max': weight_max
+    }
+
+    with _get_cursor() as cursor:
+        cursor.execute(query, params)
+        return cursor.fetchall()
