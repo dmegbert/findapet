@@ -98,15 +98,18 @@ def _get_params_from_react_data(answers):
     return params
 
 
-def get_breeds(answers):
+def get_breeds(answers, weights):
     energy_params, playful_params, friendliness_to_dogs_params = _get_params_from_react_data(answers)
+    weight_min, weight_max = weights
+    if weight_min is None or weight_max is None or weight_min > weight_max:
+        weight_min, weight_max = 0, 300
     raw_dog_info = dog_dao.get_breeds_by_criteria(energy_level=energy_params,
                                                   playfulness=playful_params,
                                                   friendliness_to_dogs=friendliness_to_dogs_params,
                                                   affection=(1, 2, 3, 4, 5),
                                                   training=(1, 2, 3, 4, 5),
-                                                  weight_min=0,
-                                                  weight_max=300)
+                                                  weight_min=weight_min,
+                                                  weight_max=weight_max)
     dog_info = {dog['id']: dog['name'] for dog in raw_dog_info}
     return dog_info
 

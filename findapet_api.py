@@ -44,9 +44,10 @@ def alexa_dog():
 
 @app.route('/dog/breed_count', methods=['POST'])
 def breed_count():
-    logging.info('Data is {}'.format(request.json))
-    answers = request.json['answers']
-    breeds = dog_service.get_breeds(answers)
+    logging.info('Data is {}'.format(request.json['data']))
+    answers = request.json['data']['answers']
+    weights = (request.json['data']['weight']['minimum'], request.json['data']['weight']['maximum'])
+    breeds = dog_service.get_breeds(answers=answers, weights=weights)
     logging.info('Breeds are: {}'.format(breeds))
     return jsonify(breeds)
 
