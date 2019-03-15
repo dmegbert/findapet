@@ -26,10 +26,10 @@ def _get_cursor():
 
 
 def hello_world_query():
-    query = """SELECT * FROM dog where playfulness = %(playfulness)s"""
+    query = """SELECT id, name FROM dog;"""
 
     with _get_cursor() as cursor:
-        cursor.execute(query, {'playfulness': 5})
+        cursor.execute(query)
         return cursor.fetchall()
 
 

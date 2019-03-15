@@ -16,7 +16,7 @@ log.setLevel(logging.INFO)
 @app.route('/')
 def hello_world():
     dogs = dog_dao.hello_world_query()
-    return str(dogs[0])
+    return jsonify(dogs)
 
 
 @app.route('/dog/<string:dog_name>')
