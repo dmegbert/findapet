@@ -99,7 +99,7 @@ def _get_params_from_react_data(answers):
 
 
 def get_breeds(answers, weights):
-    energy_params, playful_params, friendliness_to_dogs_params, training, grooming = _get_params_from_react_data(answers)
+    energy_params, playful_params, friendliness_to_dogs_params, training, grooming, vocality = _get_params_from_react_data(answers)
     weight_min, weight_max = weights
     if weight_min is None or weight_max is None or weight_min > weight_max:
         weight_min, weight_max = 0, 300
@@ -108,6 +108,7 @@ def get_breeds(answers, weights):
                                                   friendliness_to_dogs=friendliness_to_dogs_params,
                                                   training=training,
                                                   grooming=grooming,
+                                                  vocality=vocality,
                                                   weight_min=weight_min,
                                                   weight_max=weight_max)
     dog_info = {dog['id']: dog['name'] for dog in raw_dog_info}

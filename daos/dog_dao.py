@@ -83,7 +83,7 @@ def get_dog_by_id(dog_id):
     return dog_info
 
 
-def get_dog_by_criteria(energy_level, playfulness, affection, training, weight_min, weight_max):
+def get_dog_by_criteria(energy_level, playfulness, affection, training, vocality, weight_min, weight_max):
     query = """
         SELECT *
         FROM dog
@@ -114,6 +114,7 @@ def get_breeds_by_criteria(energy_level,
                            friendliness_to_dogs,
                            training,
                            grooming,
+                           vocality,
                            weight_min,
                            weight_max):
     query = """
@@ -124,6 +125,7 @@ def get_breeds_by_criteria(energy_level,
             AND friendliness_to_dogs IN %(friendliness_to_dogs)s
             AND grooming_requirements IN %(grooming)s
             AND ease_of_training IN %(training)s
+            AND vocality IN %(vocality)s
             AND weight_max >= %(weight_min)s
             AND weight_max <= %(weight_max)s
         """
@@ -134,6 +136,7 @@ def get_breeds_by_criteria(energy_level,
         'friendliness_to_dogs': friendliness_to_dogs,
         'grooming': grooming,
         'training': training,
+        'vocality': vocality,
         'weight_min': weight_min,
         'weight_max': weight_max
     }
