@@ -18,7 +18,7 @@ def get_dog_description(dog_name):
     dog_name = sanitize_string(dog_name)
     log.info('dog name is: {}'.format(dog_name))
     dog_information = dog_dao.get_dog_by_name(dog_name)
-    return dog_information['description']
+    return dog_information.get('description', '')
 
 
 def get_random_dog_and_description():
