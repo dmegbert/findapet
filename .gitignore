@@ -111,3 +111,4 @@ venv.bak/
 db/
 *.ipynb
 z_archive/scraping/dog_names_ids.json
+*.env

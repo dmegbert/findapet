@@ -9,11 +9,10 @@ services:
       ports:
       - 127.0.0.1:2345:5432
       volumes:
-        - /Users/egbert/projects/findapet/db/pgdata:/var/lib/postgresql/data
-      environment:
-        POSTGRES_PASSWORD: superHardPW
-        POSTGRES_USER: dockerDog
-        POSTGRES_DB: petdb
+        - ./db/pgdata:/var/lib/postgresql/data
+      env_file:
+        - prod.env
+        - local.env
 
   api:
     build:
@@ -24,9 +23,6 @@ services:
       - 5000:5000
     volumes:
       - ./:/app
-    environment:
-      ENDPOINT: docker_petdb
-      DATABASE: petdb
-      DBUSER: dockerDog
-      DBPASSWORD: superHardPW
-      PORT: 5432
+    env_file:
+      - prod.env
+      - local.env
