@@ -52,7 +52,7 @@ def get_dog_by_id(dog_id):
         name, 
         description, 
         history, 
-        personality, 
+        temperament,
         energy_level,
         exercise_requirements,
         playfulness,

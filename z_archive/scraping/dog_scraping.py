@@ -1,4 +1,6 @@
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import csv
+import shutil
 
 import requests
 from bs4 import BeautifulSoup
@@ -7,6 +9,11 @@ _url = "https://www.petfinder.com/{}"
 _user_agent = """Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"""
 
 _headers = {'user-agent': _user_agent}
+
+
+def main_imgs():
+    links = get_all_breed_links()
+    get_imgs(links)
 
 
 def main():
@@ -36,6 +43,27 @@ def get_all_breed_links():
         if link.get('href') and 'https://www.petfinder.com/dog-breeds' in link.get('href'):
             all_breed_links.append(link.get('href'))
     return sorted(set(all_breed_links))
+
+
+def download_img(img_src, img_alt):
+    resp = requests.get(img_src, _headers, stream=True)
+    with open(f'/Users/egbert/projects/findapet/img/{img_alt}.jpg', 'wb') as file:
+        resp.raw.decode_content = True
+        shutil.copyfileobj(resp.raw, file)
+
+
+def get_imgs(links):
+    dupes = set()
+    for idx, link in enumerate(links):
+        print(idx, link)
+        page = _get_content(link, _headers)
+        for img_elem in page.find_all('img'):
+            if img_elem['src'] not in dupes:
+                img_src = img_elem['src'].split('?')[0]
+                alt_text = img_elem.get('alt', 'no alt')
+                alt_text = alt_text.replace('/', '')
+                download_img(img_src, alt_text)
+            dupes.add(img_elem['src'])
 
 
 def get_individual_dog_data(breed_url):
@@ -76,6 +104,7 @@ def get_individual_dog_data(breed_url):
     dog = {}
     html_content = _get_content(breed_url, _headers)
     dog['name'] = [tag.text for tag in html_content.find_all('h1') if tag.text][0]
+    print(dog['name'])
     dog['form_and_function'] = [tag.p.string for tag in html_content.find_all('div', class_='txt') if tag.find_all('p')][0]
 
     out_of_five_attributes = _get_out_of_five_attributes(html_content)
@@ -88,9 +117,11 @@ def get_individual_dog_data(breed_url):
 
     # Taking Health out for now
     # dog['health'] = _get_dog_health(html_content, dog, breed_url)
-
-    dog['history'], dog['temperament'], dog['upkeep'] = _split_out_history_temperament_upkeep(html_content)
-    print(dog['name'])
+    try:
+        dog['history'], dog['temperament'], dog['upkeep'] = _split_out_history_temperament_upkeep(html_content)
+    except ValueError:
+        print(f'Not enough history, temp, upkeep values for {dog["name"]}')
+        dog['history'], dog['temperament'], dog['upkeep'] = ('', '', '')
     return dog
 
 

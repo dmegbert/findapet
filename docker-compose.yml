@@ -9,7 +9,7 @@ services:
       ports:
       - 127.0.0.1:2345:5432
       volumes:
-        - /Users/degbert/PycharmProjects/findapet/db/pgdata:/var/lib/postgresql/data
+        - /Users/egbert/projects/findapet/db/pgdata:/var/lib/postgresql/data
       environment:
         POSTGRES_PASSWORD: superHardPW
         POSTGRES_USER: dockerDog
