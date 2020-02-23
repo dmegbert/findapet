@@ -109,4 +109,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 db/
-*.sql
+*.ipynb
+z_archive/scraping/dog_names_ids.json
+*.env

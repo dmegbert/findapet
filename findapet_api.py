@@ -1,11 +1,13 @@
 import logging
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from daos import dog_dao
 from services import dog_service
 
 app = Flask(__name__)
+CORS(app)
 
 log = logging.getLogger()
 log.setLevel(logging.INFO)
@@ -14,7 +16,7 @@ log.setLevel(logging.INFO)
 @app.route('/')
 def hello_world():
     dogs = dog_dao.hello_world_query()
-    return str(dogs[0])
+    return jsonify(dogs)
 
 
 @app.route('/dog/<string:dog_name>')
@@ -38,6 +40,21 @@ def alexa_dog():
         weight=request.args.get('weight')
     )
     return jsonify(dog_info)
+
+
+@app.route('/dog/breed_count', methods=['POST'])
+def breed_count():
+    logging.info('Data is {}'.format(request.json['data']))
+    answers = request.json['data']['answers']
+    weights = (request.json['data']['weight']['minimum'], request.json['data']['weight']['maximum'])
+    breeds = dog_service.get_breeds(answers=answers, weights=weights)
+    logging.info('Breeds are: {}'.format(breeds))
+    return jsonify(breeds)
+
+
+@app.route('/dog/<int:dog_id>')
+def single_dog_info(dog_id):
+    return jsonify(dog_dao.get_dog_by_id(dog_id=dog_id))
 
 
 if __name__ == '__main__':

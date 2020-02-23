@@ -1,5 +1,6 @@
 from os import environ
 
+
 # Database Config
 ENDPOINT = environ.get('ENDPOINT')
 PORT = environ.get('PORT')
