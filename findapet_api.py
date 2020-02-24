@@ -1,3 +1,4 @@
+from os import environ
 import logging
 
 from flask import Flask, jsonify, request
@@ -58,4 +59,4 @@ def single_dog_info(dog_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=environ.get('ENV', False), host='0.0.0.0')
