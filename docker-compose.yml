@@ -3,16 +3,16 @@ version: "2.1"
 services:
 
   db:
-      image: postgres:10
-      container_name: docker_petdb
-      restart: always
-      ports:
+    image: postgres:10
+    container_name: docker_petdb
+    restart: always
+    ports:
       - 127.0.0.1:2345:5432
-      volumes:
-        - ./db/pgdata:/var/lib/postgresql/data
-      env_file:
-        - prod.env
-        - local.env
+    volumes:
+      - ./db/pgdata:/var/lib/postgresql/data
+    env_file:
+      - prod.env
+      - local.env
 
   api:
     build:
