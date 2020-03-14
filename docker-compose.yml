@@ -1,4 +1,4 @@
-version: "2.1"
+version: '3'
 
 services:
 
@@ -16,13 +16,20 @@ services:
 
   api:
     build:
-      context: ./
+      context: .
       dockerfile: Dockerfile
     container_name: docker_pet_api
-    ports:
-      - 5000:5000
     volumes:
       - ./:/app
     env_file:
       - prod.env
       - local.env
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+    - 5000:80
+    depends_on:
+      - api

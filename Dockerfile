@@ -17,4 +17,5 @@ WORKDIR /app
 
 EXPOSE 5000
 
-CMD ["python", "./findapet_api.py"]
+#CMD ["python", "./app.py"]
+CMD [ "uwsgi", "--ini", "app.ini" ]
