@@ -59,4 +59,4 @@ def single_dog_info(dog_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=environ.get('ENV', False), host='0.0.0.0')
+    app.run(host='0.0.0.0')
