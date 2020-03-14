@@ -24,12 +24,5 @@ services:
     env_file:
       - prod.env
       - local.env
-
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
     ports:
-    - 5000:80
-    depends_on:
-      - api
+    - 5000:5000
