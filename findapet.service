@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance to serve findapet
+After=network.target
+
+[Service]
+User=degbert
+Group=www-data
+WorkingDirectory=/home/degbert/findapet
+Environment="PATH=/home/degbert/findapet/env/bin"
+EnvironmentFile=/home/degbert/findapet/prod.env
+ExecStart=/home/degbert/findapet/env/bin/gunicorn --workers 3 --bind unix:findapet.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target
